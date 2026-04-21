@@ -1,0 +1,64 @@
+package com.skillspring.lms.controller;
+
+import com.skillspring.lms.dto.ProgressUpdateRequest;
+import com.skillspring.lms.model.Enrollment;
+import com.skillspring.lms.model.Payment;
+import com.skillspring.lms.model.User;
+import com.skillspring.lms.service.EnrollmentService;
+import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api")
+public class EnrollmentController {
+  private final EnrollmentService enrollmentService;
+
+  public EnrollmentController(EnrollmentService enrollmentService) {
+    this.enrollmentService = enrollmentService;
+  }
+
+  @PostMapping("/enrollments/course/{courseId}")
+  public Map<String, Object> enroll(@PathVariable Long courseId,
+                                    @AuthenticationPrincipal User user) {
+    return enrollmentService.enroll(user, courseId);
+  }
+
+  @GetMapping("/enrollments/me")
+  public List<Enrollment> getMyEnrollments(@AuthenticationPrincipal User user) {
+    return enrollmentService.getMyEnrollments(user);
+  }
+
+  @PutMapping("/enrollments/course/{courseId}/progress")
+  public Enrollment updateProgress(@PathVariable Long courseId,
+                                   @Valid @RequestBody ProgressUpdateRequest request,
+                                   @AuthenticationPrincipal User user) {
+    return enrollmentService.updateProgress(user, courseId, request.getProgress());
+  }
+
+  @GetMapping("/payments")
+  public List<Payment> getPayments() {
+    return enrollmentService.getPayments();
+  }
+
+  @GetMapping("/announcements")
+  public List<com.skillspring.lms.model.Announcement> getAnnouncements() {
+    return enrollmentService.getAllEnrollments().isEmpty()
+        ? List.of(
+            new com.skillspring.lms.model.Announcement(1L, "New Java backend track available", "All users"),
+            new com.skillspring.lms.model.Announcement(2L, "Weekend live mentor session on Spring Security", "Students")
+        )
+        : List.of(
+            new com.skillspring.lms.model.Announcement(1L, "Platform activity is live now", "All users"),
+            new com.skillspring.lms.model.Announcement(2L, "Learner progress is being tracked", "Students")
+        );
+  }
+}
