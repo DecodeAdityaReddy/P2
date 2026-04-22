@@ -1,12 +1,39 @@
 package com.skillspring.lms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+
+@Entity
+@Table(
+    name = "enrollments",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"courseId", "email"})
+)
 public class Enrollment {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(nullable = false)
   private Long courseId;
+
+  @Column(nullable = false)
   private String email;
+
+  @Column(nullable = false)
   private String userName;
+
+  @Column(nullable = false)
   private String purchasedAt;
+
+  @Column(nullable = false)
   private String status;
+
+  @Column(nullable = false)
   private Integer progress;
 
   public Enrollment() {

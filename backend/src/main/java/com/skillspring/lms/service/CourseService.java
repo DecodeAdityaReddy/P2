@@ -3,19 +3,20 @@ package com.skillspring.lms.service;
 import com.skillspring.lms.dto.CreateCourseRequest;
 import com.skillspring.lms.model.Course;
 import com.skillspring.lms.model.User;
+import com.skillspring.lms.repository.CourseRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CourseService {
-  private final DataStore dataStore;
+  private final CourseRepository courseRepository;
 
-  public CourseService(DataStore dataStore) {
-    this.dataStore = dataStore;
+  public CourseService(CourseRepository courseRepository) {
+    this.courseRepository = courseRepository;
   }
 
   public List<Course> getCourses() {
-    return dataStore.getCourses();
+    return courseRepository.findAllByOrderByIdAsc();
   }
 
   public Course createCourse(CreateCourseRequest request, User user) {
@@ -31,6 +32,6 @@ public class CourseService {
         5.0,
         request.getDescription()
     );
-    return dataStore.saveCourse(course);
+    return courseRepository.save(course);
   }
 }

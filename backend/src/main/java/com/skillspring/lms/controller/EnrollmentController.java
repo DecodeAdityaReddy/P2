@@ -1,9 +1,11 @@
 package com.skillspring.lms.controller;
 
 import com.skillspring.lms.dto.ProgressUpdateRequest;
+import com.skillspring.lms.model.Announcement;
 import com.skillspring.lms.model.Enrollment;
 import com.skillspring.lms.model.Payment;
 import com.skillspring.lms.model.User;
+import com.skillspring.lms.service.AnnouncementService;
 import com.skillspring.lms.service.EnrollmentService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -21,9 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class EnrollmentController {
   private final EnrollmentService enrollmentService;
+  private final AnnouncementService announcementService;
 
-  public EnrollmentController(EnrollmentService enrollmentService) {
+  public EnrollmentController(EnrollmentService enrollmentService, AnnouncementService announcementService) {
     this.enrollmentService = enrollmentService;
+    this.announcementService = announcementService;
   }
 
   @PostMapping("/enrollments/course/{courseId}")
@@ -50,15 +54,7 @@ public class EnrollmentController {
   }
 
   @GetMapping("/announcements")
-  public List<com.skillspring.lms.model.Announcement> getAnnouncements() {
-    return enrollmentService.getAllEnrollments().isEmpty()
-        ? List.of(
-            new com.skillspring.lms.model.Announcement(1L, "New Java backend track available", "All users"),
-            new com.skillspring.lms.model.Announcement(2L, "Weekend live mentor session on Spring Security", "Students")
-        )
-        : List.of(
-            new com.skillspring.lms.model.Announcement(1L, "Platform activity is live now", "All users"),
-            new com.skillspring.lms.model.Announcement(2L, "Learner progress is being tracked", "Students")
-        );
+  public List<Announcement> getAnnouncements() {
+    return announcementService.getAnnouncements();
   }
 }

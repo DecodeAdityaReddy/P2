@@ -1,6 +1,6 @@
 # LMS Frontend
 
-React frontend starter for a Full-Stack Learning Management System.
+React frontend for a Full-Stack Learning Management System.
 
 ## Pages included
 
@@ -21,4 +21,5 @@ React frontend starter for a Full-Stack Learning Management System.
 - `instructor@lms.com`
 - `admin@lms.com`
 
-This version uses mock authentication so you can connect it later to your Spring Boot backend.
+The frontend now connects to the Spring Boot backend through `/api` when the backend is running.
+If the API is unavailable, it falls back to browser-stored demo data so the UI still works locally.

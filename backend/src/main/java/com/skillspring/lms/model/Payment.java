@@ -1,12 +1,32 @@
 package com.skillspring.lms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "payments")
 public class Payment {
+  @Id
   private String id;
+
+  @Column(nullable = false)
   private Long courseId;
+
+  @Column(nullable = false)
   private String email;
+
+  @Column(nullable = false)
   private Integer amount;
+
+  @Column(nullable = false)
   private String provider;
+
+  @Column(nullable = false)
   private String status;
+
+  @Column(nullable = false)
   private String paidAt;
 
   public Payment() {

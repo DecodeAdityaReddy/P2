@@ -1,15 +1,46 @@
 package com.skillspring.lms.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "courses")
 public class Course {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(nullable = false)
   private String title;
+
+  @Column(nullable = false)
   private String category;
+
+  @Column(nullable = false)
   private String level;
+
+  @Column(nullable = false)
   private String instructor;
+
+  @Column(nullable = false)
   private Integer price;
+
+  @Column(nullable = false)
   private String duration;
+
+  @Column(nullable = false)
   private Integer lessons;
+
+  @Column(nullable = false)
   private Double rating;
+
+  @Lob
+  @Column(nullable = false)
   private String description;
 
   public Course() {

@@ -1,7 +1,7 @@
 package com.skillspring.lms.security;
 
 import com.skillspring.lms.model.User;
-import com.skillspring.lms.service.DataStore;
+import com.skillspring.lms.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,11 +17,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final JwtService jwtService;
-  private final DataStore dataStore;
+  private final UserRepository userRepository;
 
-  public JwtAuthenticationFilter(JwtService jwtService, DataStore dataStore) {
+  public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository) {
     this.jwtService = jwtService;
-    this.dataStore = dataStore;
+    this.userRepository = userRepository;
   }
 
   @Override
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     String email = jwtService.extractUsername(token);
-    User user = dataStore.findUserByEmail(email);
+    User user = userRepository.findByEmail(email).orElse(null);
 
     if (user != null) {
       UsernamePasswordAuthenticationToken authentication =

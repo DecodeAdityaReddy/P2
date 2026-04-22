@@ -5,6 +5,7 @@ import com.skillspring.lms.dto.LoginRequest;
 import com.skillspring.lms.dto.SignupRequest;
 import com.skillspring.lms.dto.UserDto;
 import com.skillspring.lms.model.User;
+import com.skillspring.lms.repository.UserRepository;
 import com.skillspring.lms.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,18 +15,18 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 public class AuthService {
-  private final DataStore dataStore;
+  private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
 
-  public AuthService(DataStore dataStore, PasswordEncoder passwordEncoder, JwtService jwtService) {
-    this.dataStore = dataStore;
+  public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
   }
 
   public AuthResponse signup(SignupRequest request) {
-    if (dataStore.findUserByEmail(request.getEmail()) != null) {
+    if (userRepository.findByEmail(request.getEmail()).isPresent()) {
       throw new ResponseStatusException(BAD_REQUEST, "Email already exists");
     }
 
@@ -36,12 +37,12 @@ public class AuthService {
         passwordEncoder.encode(request.getPassword()),
         request.getRole()
     );
-    dataStore.saveUser(user);
+    userRepository.save(user);
     return toAuthResponse(user);
   }
 
   public AuthResponse login(LoginRequest request) {
-    User user = dataStore.findUserByEmail(request.getEmail());
+    User user = userRepository.findByEmail(request.getEmail()).orElse(null);
 
     if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
       throw new ResponseStatusException(UNAUTHORIZED, "Invalid email or password");
