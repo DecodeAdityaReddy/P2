@@ -1,4 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+const DEFAULT_PRODUCTION_API = "https://lms-backend-production-b938.up.railway.app/api";
+
+const API_BASE = import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? DEFAULT_PRODUCTION_API : "/api");
 
 function readToken() {
   return window.localStorage.getItem("skillspring-auth-token");
